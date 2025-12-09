@@ -1,45 +1,48 @@
- import { SafeAreaView,SafeAreaProvider} from "react-native-safe-area-context";
- import { View,Text,Image,StyleSheet,Dimensions} from "react-native";
- import { Link } from "expo-router";
+import { SafeAreaView,SafeAreaProvider } from "react-native-safe-area-context";
+import { View,Text,Image,StyleSheet,Dimensions, } from "react-native";
+import { Link } from "expo-router";
+import { appStyles} from "../utilities/mainstyle"
+
+
 
 const screenWidth = Dimensions.get("window")
 
- export default function Index () {
-   return(
-     <SafeAreaProvider>
-       <SafeAreaView>
+export default function Index (){
+  return(
+   <SafeAreaProvider>
+      <SafeAreaView style ={appStyles.areaView}>
         {/* header */}
-        <View>
-          <Text>stitch flow</Text>
-          <Text>your fashion partner</Text>
-        </View>
-        {/* body*/}
-        <View>
-         <Image 
-         source={require("../assets/images/stitchlg.png")}
-         style={myStyles.logo}
+      <View style={appStyles.HeaderView}>
+        <Text style={appStyles.Appname} >STITCH FLOW</Text>
+        <Text style={appStyles.introText}>your fashion partner</Text>
+     </View>
+       {/* body */}
+       <View>
+          <Image
+          source={require("../assets/images/stitchlg.png")}
+          style={myStyles.logo}
           />
-        </View>
-        <View>
-          <Text>when you choose stitch flow fashion, you're choosing ease,comfort and reliability</Text>
-        </View>
-        {/* bottom */}
-        <View>
-         <Link href ={""}>
-          <Text>GET STARTED</Text>
-         </Link>
-        </View>
+          <Text style={appStyles.introText2}>When you choose Stitch Flow Fashion, you're choosing ease,comfort and relaibility</Text>
+       </View>
+     {/* bottom */}
+     <View style={{paddingHorizontal:30,paddingBottom:20}} >
+      <Link href="/(tabs)/homepage">
+        <View style={appStyles.getstartedView}><Text style={appStyles.linktext}>GET STARTED</Text></View>
+      </Link>
+     </View>
+      </SafeAreaView>
+   </SafeAreaProvider>
+  )
 
-        
-       </SafeAreaView>
-     </SafeAreaProvider>
+}
+const myStyles = StyleSheet.create({
+  logo:{
+    width:screenWidth,
+    height:420,
+    paddingVertical:30,
+    backgroundColor:"white",
+    resizeMode:"contain",
+  },
 
-   )
- }
-  const myStyles = StyleSheet.create({
-    logo:{
-      width:screenWidth,
-      height:420
-    }
-    
-  })
+
+})
