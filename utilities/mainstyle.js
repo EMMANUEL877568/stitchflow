@@ -95,6 +95,8 @@ introText2:{
 },
 // measurement styles
 scrollcontent:{
+    paddingBottom:50,
+    paddingVertical:10,
 
 },
 measureHeader:{
@@ -106,6 +108,8 @@ title:{
     textAlign:"center",
     fontWeight:"800",
     color:appColors.navy,
+    fontFamily:'Paterna'
+    
     
 
 },
@@ -113,6 +117,7 @@ subtitle:{
     fontSize:18,
     color:appColors.darkblue,
     textAlign:"center",
+    fontFamily:'AvegasRoyale-Bold'
 
 
 },
@@ -180,6 +185,78 @@ unittext:{
     fontSize:15,
     fontWeight:"600",
     color:appColors.darkblue
+},
+// measurement input
+
+section:{
+    marginBottom:24,
+    paddingHorizontal:20
+},
+inputTitle:{
+fontSize:18,
+fontWeight:"700",
+color:appColors.navy,
+marginBottom:8,
+},
+unit:{
+    fontSize:14,
+    color:appColors.navy,
+    marginBottom:12,
+},
+label:{
+    fontSize:16,
+    fontWeight:"800",
+    color:appColors.darkblue,
+    marginBottom:6,
+
+},
+inputwrapper:{
+    flexDirection:"row",
+    alignItems:"center",
+    borderWidth:1,
+    borderColor:appColors.grey,
+    borderRadius:10,
+    backgroundColor:appColors.darkblue
+},
+inputfield:{
+    flex:1,
+    paddingVertical:12,
+    paddingHorizontal:12,
+    fontSize:15,
+    color:"white",
+    fontWeight:"400",
+},
+munit:{
+    paddingRight:10
+},
+// call to action styles
+ctaview:{
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"space-evenly",
+    flex:1
+},
+savebtn:{
+    width:150,
+    height:50,
+    backgroundColor:appColors.darkblue,
+    borderRadius:100,
+    justifyContent:"center",
+    alignItems:"center"
+},
+resetbtn:{
+    width:150,
+    height:50,
+    backgroundColor:appColors.darkblue,
+    borderRadius:100,
+    justifyContent:"center",
+    alignItems:"center"
+},
+ctatext:{
+    color:"white",
+    fontSize:17,
+    fontWeight:800,
+    fontFamily:"paterna"
 }
 
 

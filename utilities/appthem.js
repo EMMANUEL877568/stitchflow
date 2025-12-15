@@ -4,5 +4,6 @@ export const appColors = {
     darkblue :"#1D546C",
     purple:"#8F0177",
     red:"#DE1A58",
-    ellow:"#F4B342"
+    ellow:"#F4B342",
+    black:"#000000"
 }

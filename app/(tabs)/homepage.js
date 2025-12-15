@@ -16,16 +16,7 @@ function ImageSeperator(){
 
 
 export default function Homepage (){
-    const [fontsLoaded] = useFonts({
-        "AvegasRoyale-Bold":require("../../assets/images/fonts/AvegasRoyale-Bold.ttf"),
-       "AvegasRoyale-Regular":require("../../assets/images/fonts/AvegasRoyale-Regular.ttf"),
-        "Paterna:require":require("../../assets/images/fonts/Paterna.otf"),
-        "ReilycElegantDemo-Regular":require("../../assets/images/fonts/ReilycElegantDemo-Regular.otf")
-
-    })
-    if (!fontsLoaded){
-        return null
-    }
+  
     return(
         <SafeAreaProvider>
             <SafeAreaView>
