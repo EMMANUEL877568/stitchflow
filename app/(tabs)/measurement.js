@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View, Platform} from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, } from "react-native-safe-area-context";
 import { appColors } from "../../utilities/appthem";
 import { appStyles } from "../../utilities/mainstyle";
-
+import { db } from "../../config/firebaseconfig";
+import { addDoc,collection } from "firebase/firestore";
 
 
 const MALE_MEASUREMENT = [
@@ -44,126 +45,132 @@ export default function Measurements(){
         setGender (null)
         setUnits ("inches")
     }
+    const HandleSave = async () => {
+        if(!gender || object .keys(measurements).length){}
+
+    }
 
 
     return(
         <SafeAreaProvider>
-            <KeyboardAvoidingView 
-             behavior={Platform.OS ==="ios" ? "padding" : "height"}
-             style={{flex:1, paddingBottom:30}}
-            >
-                <ScrollView contentContainerStyle= {appStyles.scrollcontent} >
-                <View>
-                    {/* header */}
-                   <View style={appStyles.measureHeader}>
-                    <Text style={appStyles.title}>Measurements </Text>
-                    <Text style={appStyles.subtitle}>kindly provide your body measurements for acurate fitting</Text>
-                   </View>
-                   {/* gender selection */}
-                   <View style={appStyles.gendersection}>
-                    <Text style = {appStyles.subtitle}>Select your gender</Text>
-                    <View style={appStyles.genderView}>
-                        <TouchableOpacity
-                        style={[appStyles.genderbtn, gender === "male" && appStyles.genderbtnactive]}
-                        onPress={() => {
-                            setGender("male")
-                            setMeasurements({})
-                        }}
-                        >
-                            <Text style={[appStyles.gendertext,gender === "male" && appStyles.genderTextActive]}> Male</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                        onPress={() => {
-                            setGender("female")
-                            setMeasurements({})
-                        }}
-                        style={[appStyles.genderbtn, gender === "female" && appStyles.genderbtnactive]}
-                        >
-                            <Text  style={[appStyles.gendertext,gender === "female" && appStyles.genderTextActive]}>Female</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {/* unit selection */}
+            {/* <SafeAreaView> */}
+                <KeyboardAvoidingView 
+                behavior={Platform.OS ==="ios" ? "padding" : "height"}
+                style={{flex:1, paddingBottom:30}}
+                >
+                    <ScrollView contentContainerStyle= {appStyles.scrollcontent} >
                     <View>
-                        <Text style={appStyles.subtitle}>Unit of measurement</Text>
-                        <View style={appStyles.genderView}>
-                            <TouchableOpacity 
-                            style={[appStyles.unitbtn, unit === "inches" && appStyles.unitbtnactive]}
-                            onPress={() => {
-                                setUnits("inches")
-                            }}
-                            >
-                                <Text
-                                style={[appStyles.unittext,unit === "inches" && appStyles.unittextactive]}
-                                >Inches</Text>
-                            </TouchableOpacity>
-                            
-                            <TouchableOpacity
-                             onPress={() => {
-                                setUnits("cm")
-                            }}
-                             style={[appStyles.unitbtn, unit === "cm" && appStyles.unitbtnactive]}
-                            >
-                                <Text style={[appStyles.unittext,unit === "cm" && appStyles.unittextactive]} >Centimeters</Text>
-                            </TouchableOpacity>
-                        </View>
-
+                        {/* header */}
+                    <View style={appStyles.measureHeader}>
+                        <Text style={appStyles.title}>Measurements </Text>
+                        <Text style={appStyles.subtitle}>kindly provide your body measurements for acurate fitting</Text>
                     </View>
-                    
-                   </View>
-                </View>
-                {/* measurement input */}
-                {
-                    gender && (
-                        <View style ={appStyles.section}>
-                            <Text style = {appStyles.inputTitle}>Enter measurements</Text>
-                            <Text>(in {unit === "inches" ? "inches" : "cm" })</Text>
-                                { measurementFields.map((field) => ( 
-                                       <View key={field.key}>
-                                           <Text>{field.label}</Text>
-                                            <View style= {appStyles.inputwrapper} >
-                                                <TextInput
-                                                placeholder={field.placeholder}
-                                                keyboardType="decimal-pad"
-                                                style={appStyles.inputfield}
-                                                placeholderTextColor="white"
-                                                value={measurements[field.key] || ""}
-                                                onChange={(value) => handleMeasuremetchange (field.key,value) }
-                                                  />
-                                                  <Text style ={appStyles.munit}>{unit === "inches"  ? "inches" : "cm"}</Text>
-                                                  <View>
-                                                     <TextInput/>
-                                                    </View>
-                                            </View>
-                                       </View>
-
-                                ))
-                                
-                                }
-                           
+                    {/* gender selection */}
+                    <View style={appStyles.gendersection}>
+                        <Text style = {appStyles.subtitle}>Select your gender</Text>
+                        <View style={appStyles.genderView}>
+                            <TouchableOpacity
+                            style={[appStyles.genderbtn, gender === "male" && appStyles.genderbtnactive]}
+                            onPress={() => {
+                                setGender("male")
+                                setMeasurements({})
+                            }}
+                            >
+                                <Text style={[appStyles.gendertext,gender === "male" && appStyles.genderTextActive]}> Male</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                            onPress={() => {
+                                setGender("female")
+                                setMeasurements({})
+                            }}
+                            style={[appStyles.genderbtn, gender === "female" && appStyles.genderbtnactive]}
+                            >
+                                <Text  style={[appStyles.gendertext,gender === "female" && appStyles.genderTextActive]}>Female</Text>
+                            </TouchableOpacity>
                         </View>
-
-                    )
-                }
-                     {/* CALL TO ACTION */}
-                                {gender && (
-                                     <View style= {appStyles.ctaview}>
-                                        <TouchableOpacity style ={appStyles.savebtn}>
-                                                 <Text style = {appStyles.ctatext}>Save</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity 
-                                        on onPress={HandleReset}
-                                        
-                                        style ={appStyles.resetbtn}>
-                                            <Text style ={appStyles.ctatext}>Reset</Text>
-                                        </TouchableOpacity>
-                                     </View>
-
-                                )}
-                            
-                                    
+                        {/* unit selection */}
+                        <View>
+                            <Text style={appStyles.subtitle}>Unit of measurement</Text>
+                            <View style={appStyles.genderView}>
+                                <TouchableOpacity 
+                                style={[appStyles.unitbtn, unit === "inches" && appStyles.unitbtnactive]}
+                                onPress={() => {
+                                    setUnits("inches")
+                                }}
+                                >
+                                    <Text
+                                    style={[appStyles.unittext,unit === "inches" && appStyles.unittextactive]}
+                                    >Inches</Text>
+                                </TouchableOpacity>
                                 
-                </ScrollView>
+                                <TouchableOpacity
+                                onPress={() => {
+                                    setUnits("cm")
+                                }}
+                                style={[appStyles.unitbtn, unit === "cm" && appStyles.unitbtnactive]}
+                                >
+                                    <Text style={[appStyles.unittext,unit === "cm" && appStyles.unittextactive]} >Centimeters</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                        
+                    </View>
+                    </View>
+                    {/* measurement input */}
+                    {
+                        gender && (
+                            <View style ={appStyles.section}>
+                                <Text style = {appStyles.inputTitle}>Enter measurements</Text>
+                                <Text>(in {unit === "inches" ? "inches" : "cm" })</Text>
+                                    { measurementFields.map((field) => ( 
+                                        <View key={field.key}>
+                                            <Text>{field.label}</Text>
+                                                <View style= {appStyles.inputwrapper} >
+                                                    <TextInput
+                                                    placeholder={field.placeholder}
+                                                    keyboardType="decimal-pad"
+                                                    style={appStyles.inputfield}
+                                                    placeholderTextColor="white"
+                                                    value={measurements[field.key] || ""}
+                                                    onChange={(value) => handleMeasuremetchange (field.key,value) }
+                                                    />
+                                                    <Text style ={appStyles.munit}>{unit === "inches"  ? "inches" : "cm"}</Text>
+                                                    <View>
+                                                        <TextInput/>
+                                                        </View>
+                                                </View>
+                                        </View>
+
+                                    ))
+                                    
+                                    }
+                            
+                            </View>
+
+                        )
+                    }
+                        {/* CALL TO ACTION */}
+                                    {gender && (
+                                        <View style= {appStyles.ctaview}>
+                                            <TouchableOpacity style ={appStyles.savebtn}>
+                                                    <Text style = {appStyles.ctatext}>Save</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity 
+                                            on onPress={HandleReset}
+                                            
+                                            style ={appStyles.resetbtn}>
+                                                <Text style ={appStyles.ctatext}>Reset</Text>
+                                            </TouchableOpacity>
+                                        </View>
+
+                                    )}
+                                
+                                        
+                                    
+                    </ScrollView>
             </KeyboardAvoidingView>
+             {/* </SafeAreaView> */}
         </SafeAreaProvider>
     )
 }
