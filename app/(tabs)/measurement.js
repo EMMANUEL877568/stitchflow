@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View, Platform} from "react-native";
-import { SafeAreaProvider, } from "react-native-safe-area-context";
+import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View, Platform,Alert,ActivityIndicator} from "react-native";
+import { SafeAreaProvider,SafeAreaView } from "react-native-safe-area-context";
 import { appColors } from "../../utilities/appthem";
 import { appStyles } from "../../utilities/mainstyle";
 import { db } from "../../config/firebaseconfig";
@@ -31,15 +31,38 @@ export default function Measurements(){
     const [gender ,setGender] = useState(null)
     const [measurements ,setMeasurements] = useState("inches")
     const [unit , setUnits] = useState({})
+    const [ IsLoading,setIsLoading] = useState(false)
+
 
     const measurementFields = gender === "male" ? MALE_MEASUREMENT : FEMALE_MEASUREMENT ;
 
     const handleMeasuremetchange= (key,value) => {
         setMeasurements( ({
-            ...prev,
             [key]:value,
         }));
     };
+    const HandleMeasuremetSave = async () => {
+        if(!gender || Object.keys(measurements). length === 0 ) {
+            Alert.alert("Missing fields","please select a gender and fill in measurements")
+        };
+        
+        setIsLoading(true);
+        try {
+         const docRef =  await addDoc(collection(db,"measurements"),{
+            gender:gender,
+            unit:unit,
+            measurements:measurements,
+            createdAt:new Date ()
+             });
+             Alert.alert("ALERT!!","MEASUREMENTS SAVED SUCCESSFULLY")
+            }catch (error) {
+                console.log("?????",error)
+                Alert.alert("ERROR","AN ERROR OCCURED WHILE SAVING MEASUREMENTS,PLEASE CHECK YOUR INTERNETCONNECTION")
+            }
+             
+             
+
+    }
     const HandleReset = ()=> {
         setMeasurements ({})
         setGender (null)
@@ -53,7 +76,7 @@ export default function Measurements(){
 
     return(
         <SafeAreaProvider>
-            {/* <SafeAreaView> */}
+             <SafeAreaView style = {{flex:1}}> 
                 <KeyboardAvoidingView 
                 behavior={Platform.OS ==="ios" ? "padding" : "height"}
                 style={{flex:1, paddingBottom:30}}
@@ -125,7 +148,7 @@ export default function Measurements(){
                                 <Text>(in {unit === "inches" ? "inches" : "cm" })</Text>
                                     { measurementFields.map((field) => ( 
                                         <View key={field.key}>
-                                            <Text>{field.label}</Text>
+                                            <Text style={appStyles.label} >{field.label}</Text>
                                                 <View style= {appStyles.inputwrapper} >
                                                     <TextInput
                                                     placeholder={field.placeholder}
@@ -133,7 +156,7 @@ export default function Measurements(){
                                                     style={appStyles.inputfield}
                                                     placeholderTextColor="white"
                                                     value={measurements[field.key] || ""}
-                                                    onChange={(value) => handleMeasuremetchange (field.key,value) }
+                                                    onChangeText={(value) => handleMeasuremetchange (field.key,value) }
                                                     />
                                                     <Text style ={appStyles.munit}>{unit === "inches"  ? "inches" : "cm"}</Text>
                                                     <View>
@@ -153,8 +176,9 @@ export default function Measurements(){
                         {/* CALL TO ACTION */}
                                     {gender && (
                                         <View style= {appStyles.ctaview}>
-                                            <TouchableOpacity style ={appStyles.savebtn}>
-                                                    <Text style = {appStyles.ctatext}>Save</Text>
+                                            <TouchableOpacity onPress={HandleMeasuremetSave} style ={appStyles.savebtn}>
+                                                    { IsLoading ? <ActivityIndicator  color ={appColors.red} size="small" /> :
+                                                    <Text style = {appStyles.ctatext}>Save</Text> }
                                             </TouchableOpacity>
                                             <TouchableOpacity 
                                             on onPress={HandleReset}
@@ -170,7 +194,7 @@ export default function Measurements(){
                                     
                     </ScrollView>
             </KeyboardAvoidingView>
-             {/* </SafeAreaView> */}
+             </SafeAreaView> 
         </SafeAreaProvider>
     )
 }
